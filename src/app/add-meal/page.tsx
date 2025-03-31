@@ -28,8 +28,8 @@ export default function AddMealPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!file) return alert("Please upload an image");
-    if (!mealType) return alert("Please select a meal type");
+    if (!file) return toast.warning("Please upload an image");
+    if (!mealType) return toast.warning("Please select a meal type");
 
     try {
       setLoading(true);
@@ -109,7 +109,7 @@ export default function AddMealPage() {
         {/* Upload Button */}
         <button
           type="submit"
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg transition"
+          className="w-full bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg transition mb-20"
           disabled={loading}
         >
           {loading ? "Uploading..." : "Upload"}

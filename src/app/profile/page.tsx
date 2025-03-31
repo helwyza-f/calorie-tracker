@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 
 export default function ProfilePage() {
   const [fullName, setFullName] = useState("");
-  const [bb, setBb] = useState(0);
-  const [tb, setTb] = useState(0);
+  const [bb, setBb] = useState("");
+  const [tb, setTb] = useState("");
   const [calorieGoal, setCalorieGoal] = useState(2200);
   const [loading, setLoading] = useState(true);
 
@@ -70,8 +70,8 @@ export default function ProfilePage() {
             Berat Badan (kg):
             <input
               type="number"
-              value={bb || 0}
-              onChange={(e) => setBb(Number(e.target.value))}
+              value={bb}
+              onChange={(e) => setBb(e.target.value)}
               className="w-full p-2 rounded bg-gray-800 text-white"
             />
           </label>
@@ -79,9 +79,9 @@ export default function ProfilePage() {
           <label className="block mb-2">
             Tinggi Badan (cm):
             <input
-              type="number"
-              value={tb || 0}
-              onChange={(e) => setTb(Number(e.target.value))}
+              type="text"
+              value={tb}
+              onChange={(e) => setTb(e.target.value)}
               className="w-full p-2 rounded bg-gray-800 text-white"
             />
           </label>
