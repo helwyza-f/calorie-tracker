@@ -4,52 +4,80 @@ import { useState, useEffect } from "react";
 import CircularProgress from "@/components/CircularProgress";
 import MealCard from "@/components/MealCard";
 
-const MEALS = [
-  {
-    title: "Breakfast",
-    description: "Eggs and toast",
-    calories: 85,
-    image:
-      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1470&q=80",
-  },
-  {
-    title: "Lunch",
-    description: "Pasta and salad",
-    calories: 500,
-    image:
-      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1470&q=80",
-  },
-  {
-    title: "Dinner",
-    description: "Grilled chicken and veggies",
-    calories: 700,
-    image:
-      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1470&q=80",
-  },
-];
+// ✅ Definisikan tipe Meal sesuai database Supabase
+interface Meal {
+  id: string;
+  user_id: string;
+  image_url: string;
+  description: string | null;
+  meal_type: "breakfast" | "lunch" | "dinner" | "snack" | null;
+  calories: number | null;
+  protein: number | null;
+  fat: number | null;
+  carbs: number | null;
+  created_at: string;
+}
 
 export default function MealList() {
+  const [meals, setMeals] = useState<Meal[]>([]);
   const [totalCalories, setTotalCalories] = useState(0);
-  const calorieGoal = 2000; // Target kalori harian
+  const [totalProtein, setTotalProtein] = useState(0);
+  const [totalFat, setTotalFat] = useState(0);
+  const [totalCarbs, setTotalCarbs] = useState(0);
+  const [calorieGoal, setCalorieGoal] = useState(0);
 
   useEffect(() => {
-    const total = MEALS.reduce((sum, meal) => sum + meal.calories, 0);
-    setTotalCalories(total);
+    const fetchMeals = async () => {
+      try {
+        const res = await fetch("/api/meals"); // Panggil API dari Supabase
+        const data: Meal[] = await res.json(); // Parsing data sesuai tipe Meal
+        setMeals(data);
+
+        // ✅ Hitung total kalori & makronutrien dari semua makanan
+        const totalCal = data.reduce(
+          (sum, meal) => sum + (meal.calories || 0),
+          0
+        );
+        const totalProt = data.reduce(
+          (sum, meal) => sum + (meal.protein || 0),
+          0
+        );
+        const totalFat = data.reduce((sum, meal) => sum + (meal.fat || 0), 0);
+        const totalCarb = data.reduce(
+          (sum, meal) => sum + (meal.carbs || 0),
+          0
+        );
+
+        setTotalCalories(totalCal);
+        setTotalProtein(totalProt);
+        setTotalFat(totalFat);
+        setTotalCarbs(totalCarb);
+
+        // 🎯 Fetch Calorie Goal dari Supabase
+        const resProfile = await fetch("/api/profile");
+        const profileData = await resProfile.json();
+        setCalorieGoal(profileData.calorie_goal || 2000); // Jika null, pakai default 2000
+      } catch (error) {
+        console.error("Failed to fetch meals:", error);
+      }
+    };
+
+    fetchMeals();
   }, []);
 
   return (
     <div className="flex flex-col gap-3 mt-4 items-center">
       {/* 🥗 Progress Section */}
-      <div className="bg-gray-900 p-4 rounded-lg flex flex-col items-center gap-4 md:flex-row md:justify-between md:mx-auto md:min-w-4xl">
+      <div className="bg-black p-4 rounded-lg flex flex-col items-center gap-4 md:flex-row md:justify-between md:mx-auto md:min-w-4xl">
         {/* Circular Progress */}
         <CircularProgress percentage={(totalCalories / calorieGoal) * 100} />
 
         {/* Macronutrient Breakdown */}
         <div className="w-full flex justify-between text-sm text-gray-400 md:w-auto md:gap-6">
           {[
-            { label: "Protein", value: "120g" },
-            { label: "Fat", value: "80g" },
-            { label: "Carbs", value: "250g" },
+            { label: "Protein", value: `${totalProtein}g` },
+            { label: "Fat", value: `${totalFat}g` },
+            { label: "Carbs", value: `${totalCarbs}g` },
           ].map((item) => (
             <div key={item.label} className="flex flex-col items-center">
               <span className="font-bold text-white text-base md:text-lg">
@@ -59,6 +87,7 @@ export default function MealList() {
             </div>
           ))}
         </div>
+
         {/* 🔥 Total Calorie Count */}
         <div className="flex flex-col items-center">
           <p className="text-white text-lg font-bold">
@@ -71,8 +100,14 @@ export default function MealList() {
       </div>
 
       {/* 🍽 Meal List */}
-      {MEALS.map((meal) => (
-        <MealCard key={meal.title} {...meal} />
+      {meals.map((meal) => (
+        <MealCard
+          key={meal.id} // ✅ Gunakan ID dari database
+          image={meal.image_url}
+          title={meal.meal_type || "Unknown"} // Jika meal_type null, default ke "Unknown"
+          description={meal.description || "No description"}
+          calories={meal.calories || 0}
+        />
       ))}
     </div>
   );
