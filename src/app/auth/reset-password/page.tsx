@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { resetPasswordAction } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const [message, setMessage] = useState<string | null>(null);
   const [code, setCode] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -55,38 +55,45 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white">
-      <form onSubmit={handleSubmit} className="w-96 p-6 bg-gray-800 rounded-lg">
-        <h1 className="text-2xl font-bold mb-4">Reset Password</h1>
-        {message && <p className="text-blue-500 mb-2">{message}</p>}
-        <Input
-          type="password"
-          name="password"
-          placeholder="New Password"
-          required
-          className="mb-3"
-        />
-        <Input
-          type="password"
-          name="confirmPassword"
-          placeholder="Confirm Password"
-          required
-          className="mb-3"
-        />
-        <Button
-          type="submit"
-          className="w-full hover:bg-gray-700"
-          disabled={loading}
-        >
-          {loading ? "Loading..." : "Reset Password"}
-        </Button>
+    <form onSubmit={handleSubmit} className="w-96 p-6 bg-gray-800 rounded-lg">
+      <h1 className="text-2xl font-bold mb-4">Reset Password</h1>
+      {message && <p className="text-blue-500 mb-2">{message}</p>}
+      <Input
+        type="password"
+        name="password"
+        placeholder="New Password"
+        required
+        className="mb-3"
+      />
+      <Input
+        type="password"
+        name="confirmPassword"
+        placeholder="Confirm Password"
+        required
+        className="mb-3"
+      />
+      <Button
+        type="submit"
+        className="w-full hover:bg-gray-700"
+        disabled={loading}
+      >
+        {loading ? "Loading..." : "Reset Password"}
+      </Button>
+      <div className="mt-2 text-sm text-center">
+        <Link href="/sign-in" className="text-blue-400 hover:underline">
+          Back to Sign In
+        </Link>
+      </div>
+    </form>
+  );
+}
 
-        <div className="mt-2 text-sm text-center">
-          <Link href="/sign-in" className="text-blue-400 hover:underline">
-            Back to Sign In
-          </Link>
-        </div>
-      </form>
+export default function ResetPasswordPage() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white">
+      <Suspense fallback={<p>Loading...</p>}>
+        <ResetPasswordForm />
+      </Suspense>
     </div>
   );
 }
