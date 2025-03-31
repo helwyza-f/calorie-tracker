@@ -12,7 +12,7 @@ export default async function Home() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return redirect("/sign-in");
-  let metadata = user.user_metadata;
+  const metadata = user.user_metadata;
   return (
     <div className="flex flex-col pb-40 md:items-center">
       <div className="p-4 ">
