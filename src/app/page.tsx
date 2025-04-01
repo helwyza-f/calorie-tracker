@@ -12,14 +12,23 @@ export default async function Home() {
   } = await supabase.auth.getUser();
   if (!user) return redirect("/sign-in");
 
-  // Fetch meals data langsung dari Supabase
-  const today = new Date().toISOString().split("T")[0];
-  const { data: meals } = await supabase
+  const now = new Date();
+
+  // Get today's date in UTC (removing time)
+  const todayUTC = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate())
+  )
+    .toISOString()
+    .split("T")[0];
+
+  const { data: meals, error } = await supabase
     .from("meals")
     .select("*")
     .eq("user_id", user.id)
-    .gte("created_at", `${today}T00:00:00`)
-    .lte("created_at", `${today}T23:59:59`);
+    .gte("created_at", `${todayUTC}T00:00:00.000Z`)
+    .lte("created_at", `${todayUTC}T23:59:59.999Z`);
+
+  if (error) console.error("Error fetching meals:", error);
 
   // Fetch user calorie goal
   const { data: profile } = await supabase
