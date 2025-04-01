@@ -17,5 +17,5 @@ export default function ClientWrapper() {
     }
   }, []);
 
-  return <Toaster position="top-right" />;
+  return <Toaster position="top-right" richColors />;
 }
