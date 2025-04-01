@@ -24,7 +24,7 @@ export default async function Home() {
   // Fetch user calorie goal
   const { data: profile } = await supabase
     .from("profiles")
-    .select("calorie_goal")
+    .select("calorie_goal,full_name")
     .eq("id", user.id)
     .single();
 
@@ -43,7 +43,7 @@ export default async function Home() {
     <div className="flex flex-col pb-40 md:items-center">
       <div className="p-4">
         <h1 className="text-xl font-bold md:text-2xl">
-          Hi, {user.user_metadata.full_name}
+          Hi, {profile?.full_name}
         </h1>
       </div>
       <div className="fixed bottom-24 right-5 bg-white rounded-full xl:bottom-14 xl:right-24">
