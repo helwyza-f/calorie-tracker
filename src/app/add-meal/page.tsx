@@ -15,7 +15,8 @@ export default function AddMealPage() {
   const router = useRouter();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0] || null;
+    if (!e.target.files) return;
+    const selectedFile = e.target.files?.[0];
     setFile(selectedFile);
 
     if (selectedFile) {
