@@ -2,6 +2,7 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import ProfileForm from "./ProfileForm"; // Import the client component
+import { signOutAction } from "@/actions/auth";
 
 export default async function ProfilePage() {
   "use server";
@@ -30,6 +31,17 @@ export default async function ProfilePage() {
     <div className="max-w-md mx-auto p-4 bg-gray-900 text-white rounded-lg shadow-lg">
       <h1 className="text-2xl font-bold mb-4">Profile</h1>
       <ProfileForm profile={profile} userId={user.id} />
+      {/* signout button */}
+      <div className="text-center my-10">
+        <form action={signOutAction}>
+          <button
+            type="submit"
+            className="mt-4 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4  rounded-lg"
+          >
+            Sign Out
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
