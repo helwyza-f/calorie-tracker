@@ -8,15 +8,18 @@ export default function Navigation() {
   const pathname = usePathname(); // Get the current path
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full flex justify-around bg-black p-4 md:static md:top-0 md:w-full md:flex-row md:justify-center md:gap-10 md:px-20 *:bg-gray-800">
+    <nav className="fixed bottom-0 left-0 w-full flex justify-around bg-black p-6 md:static md:top-0 md:w-full md:flex-row md:justify-center md:gap-10 md:px-20 *:bg-gray-800">
       <Button
         asChild
         variant="ghost"
         className={`md:text-lg ${
           pathname === "/" ? "text-blue-500" : "text-white"
         }`} // Highlight Home link when active
+        size={"lg"}
       >
-        <Link href={"/"}>🏠 Home</Link>
+        <Link href={"/"} className="text-lg">
+          🏠 Home
+        </Link>
       </Button>
 
       <Button
@@ -25,8 +28,11 @@ export default function Navigation() {
         className={`md:text-lg ${
           pathname === "/profile" ? "text-blue-500" : "text-white"
         }`} // Highlight Profile link when active
+        size={"lg"}
       >
-        <Link href={"/profile"}>👤 Profile</Link>
+        <Link href={"/profile"} className="text-lg">
+          👤 Profile
+        </Link>
       </Button>
     </nav>
   );
