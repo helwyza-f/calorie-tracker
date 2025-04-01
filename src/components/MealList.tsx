@@ -29,11 +29,11 @@ export default function MealList() {
   useEffect(() => {
     const fetchMeals = async () => {
       try {
-        const res = await fetch("/api/meals"); // Panggil API dari Supabase
-        const data: Meal[] = await res.json(); // Parsing data sesuai tipe Meal
+        const today = new Date().toISOString().split("T")[0]; // Format: YYYY-MM-DD
+        const res = await fetch(`/api/meals?range=today`);
+        const data: Meal[] = await res.json();
         setMeals(data);
 
-        // ✅ Hitung total kalori & makronutrien dari semua makanan
         const totalCal = data.reduce(
           (sum, meal) => sum + (meal.calories || 0),
           0
@@ -53,10 +53,9 @@ export default function MealList() {
         setTotalFat(totalFat);
         setTotalCarbs(totalCarb);
 
-        // 🎯 Fetch Calorie Goal dari Supabase
         const resProfile = await fetch("/api/profile");
         const profileData = await resProfile.json();
-        setCalorieGoal(profileData.calorie_goal || 2000); // Jika null, pakai default 2000
+        setCalorieGoal(profileData.calorie_goal || 2000);
       } catch (error) {
         console.error("Failed to fetch meals:", error);
       }
@@ -66,7 +65,7 @@ export default function MealList() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-3 mt-4 items-center">
+    <div className="flex flex-col gap-3 m-2 items-center">
       {/* 🥗 Progress Section */}
       <div className="bg-black p-4 rounded-lg flex flex-col items-center gap-4 md:flex-row md:justify-between md:mx-auto md:min-w-4xl">
         {/* Circular Progress */}

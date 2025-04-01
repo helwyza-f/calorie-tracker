@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
       "protein": jumlah_protein,
       "fat": jumlah_lemak,
       "carbs": jumlah_karbohidrat,
-      "deskripsi": deskripsi_singkat_tentang_makanan_15_kata
+      "deskripsi": deskripsi_singkat_tentang_makanan_12_kata
     }`;
 
     const result = await model.generateContent([

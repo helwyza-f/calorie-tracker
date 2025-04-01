@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 export default function ProfilePage() {
   const [fullName, setFullName] = useState("");
   const [bb, setBb] = useState("");
   const [tb, setTb] = useState("");
-  const [calorieGoal, setCalorieGoal] = useState(2200);
+  const [calorieGoal, setCalorieGoal] = useState("2200");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -16,8 +17,8 @@ export default function ProfilePage() {
         const res = await fetch("/api/profile");
         const data = await res.json();
         setFullName(data.full_name);
-        setBb(data.bb);
-        setTb(data.tb);
+        setBb(data.bb || "");
+        setTb(data.tb || "");
         setCalorieGoal(data.calorie_goal);
       } catch (error) {
         console.error("Error fetching profile:", error);
@@ -41,7 +42,7 @@ export default function ProfilePage() {
         }),
         headers: { "Content-Type": "application/json" },
       });
-      alert("Profile updated!");
+      toast.success("Profile updated!");
     } catch (error) {
       console.error("Error updating profile:", error);
     }
@@ -69,7 +70,7 @@ export default function ProfilePage() {
           <label className="block mb-2">
             Berat Badan (kg):
             <input
-              type="number"
+              type="text"
               value={bb}
               onChange={(e) => setBb(e.target.value)}
               className="w-full p-2 rounded bg-gray-800 text-white"
@@ -89,9 +90,9 @@ export default function ProfilePage() {
           <label className="block mb-2">
             Calorie Goal:
             <input
-              type="number"
+              type="text"
               value={calorieGoal}
-              onChange={(e) => setCalorieGoal(Number(e.target.value))}
+              onChange={(e) => setCalorieGoal(e.target.value)}
               className="w-full p-2 rounded bg-gray-800 text-white"
             />
           </label>

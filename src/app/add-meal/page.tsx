@@ -18,9 +18,7 @@ export default function AddMealPage() {
     setFile(selectedFile);
 
     if (selectedFile) {
-      const reader = new FileReader();
-      reader.onload = (event) => setPreview(event.target?.result as string);
-      reader.readAsDataURL(selectedFile);
+      setPreview(URL.createObjectURL(selectedFile));
     } else {
       setPreview(null);
     }

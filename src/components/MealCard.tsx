@@ -15,8 +15,8 @@ export default function MealCard({
   image: string;
 }) {
   return (
-    <Card className="bg-gray-800 p-4 rounded-lg flex flex-row items-center gap-4 text-white max-w-3xl w-full">
-      <div className="w-14 h-14 bg-gray-700 rounded-md overflow-hidden">
+    <Card className="bg-gray-800 p-4 m-2 rounded-lg flex flex-row items-center gap-4 text-white max-w-3xl w-full">
+      <div className="w-16 h-16 bg-gray-700 rounded-md overflow-hidden">
         <Image
           src={image}
           alt={title}
@@ -26,8 +26,8 @@ export default function MealCard({
         />
       </div>
       <div className="flex-1">
-        <h2 className="text-sm font-bold">{title}</h2>
-        <p className="text-xs text-gray-400">{description}</p>
+        <h2 className="text-base font-bold">{title}</h2>
+        <p className="text-sm text-gray-400">{description}</p>
       </div>
       <span className="text-sm font-bold">{calories} kcal</span>
     </Card>
