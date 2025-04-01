@@ -1,5 +1,4 @@
 import MealList from "@/components/MealList";
-
 import { signOutAction } from "@/actions/auth";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
@@ -12,12 +11,39 @@ export default async function Home() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return redirect("/sign-in");
-  const metadata = user.user_metadata;
+
+  // Fetch meals data langsung dari Supabase
+  const today = new Date().toISOString().split("T")[0];
+  const { data: meals } = await supabase
+    .from("meals")
+    .select("*")
+    .eq("user_id", user.id)
+    .gte("created_at", `${today}T00:00:00`)
+    .lte("created_at", `${today}T23:59:59`);
+
+  // Fetch user calorie goal
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("calorie_goal")
+    .eq("id", user.id)
+    .single();
+
+  const calorieGoal = profile?.calorie_goal || 2000;
+
+  // Hitung total nutrisi
+  const totalCalories =
+    meals?.reduce((sum, meal) => sum + (meal.calories || 0), 0) || 0;
+  const totalProtein =
+    meals?.reduce((sum, meal) => sum + (meal.protein || 0), 0) || 0;
+  const totalFat = meals?.reduce((sum, meal) => sum + (meal.fat || 0), 0) || 0;
+  const totalCarbs =
+    meals?.reduce((sum, meal) => sum + (meal.carbs || 0), 0) || 0;
+
   return (
     <div className="flex flex-col pb-40 md:items-center">
-      <div className="p-4 ">
+      <div className="p-4">
         <h1 className="text-xl font-bold md:text-2xl">
-          Hi, {metadata.full_name}
+          Hi, {user.user_metadata.full_name}
         </h1>
         <form action={signOutAction}>
           <button
@@ -34,7 +60,15 @@ export default async function Home() {
         </Link>
       </div>
 
-      <MealList />
+      {/* Kirim data hasil fetch ke MealList */}
+      <MealList
+        meals={meals || []}
+        totalCalories={totalCalories}
+        totalProtein={totalProtein}
+        totalFat={totalFat}
+        totalCarbs={totalCarbs}
+        calorieGoal={calorieGoal}
+      />
     </div>
   );
 }

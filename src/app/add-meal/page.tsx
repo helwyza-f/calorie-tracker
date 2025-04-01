@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Camera } from "lucide-react";
 import { toast } from "sonner";
+import Image from "next/image";
 
 export default function AddMealPage() {
   const [file, setFile] = useState<File | null>(null);
@@ -43,6 +44,7 @@ export default function AddMealPage() {
 
       if (res.ok) {
         toast.success("Item berhasil ditambahkan");
+        router.refresh();
         router.push("/");
       } else {
         toast.error("Item gagal ditambahkan");
@@ -62,7 +64,13 @@ export default function AddMealPage() {
         {/* Upload File */}
         <label className="w-full flex flex-col items-center justify-center border-2 border-dashed border-gray-500 p-6 rounded-lg cursor-pointer hover:border-blue-400">
           {preview ? (
-            <img src={preview} alt="Preview" className="w-full rounded-lg" />
+            <Image
+              src={preview}
+              alt="Preview"
+              className="w-full rounded-lg"
+              width={300}
+              height={300}
+            />
           ) : (
             <>
               <Camera size={40} strokeWidth={1.5} className="text-gray-400" />
@@ -74,6 +82,7 @@ export default function AddMealPage() {
           <input
             type="file"
             accept="image/*"
+            capture="environment"
             onChange={handleFileChange}
             className="hidden"
           />
