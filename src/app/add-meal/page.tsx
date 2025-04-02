@@ -61,7 +61,7 @@ export default function AddMealPage() {
     <div className="relative min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white p-4">
       {/* ✅ Overlay Blur saat Loading */}
       {loading && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm z-50">
+        <div className="absolute inset-0 flex flex-col gap-2 items-center justify-center bg-black/50 backdrop-blur-sm z-50">
           <Loader2 size={40} className="animate-spin text-white" />
           <span className="text-white text-sm">AI is thinking...</span>
         </div>

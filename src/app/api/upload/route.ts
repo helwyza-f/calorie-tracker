@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const base64Data = buffer.toString("base64");
-    const prompt = `Analisis gambar makanan ini dengan deskripsi "${description}" dan berikan jumlah kalori, protein, lemak, dan karbohidrat dalam format JSON seperti ini dan hanya berikan format JSON tanpa tambahan teks lain:  
+    const prompt = `Analisis gambar makanan atau minuman ini dengan deskripsi "${description}" dan berikan jumlah kalori, protein, lemak, dan karbohidrat dalam format JSON seperti ini dan hanya berikan format JSON tanpa tambahan teks lain:  
     {
       "calories": jumlah_kalori,
       "protein": jumlah_protein,
