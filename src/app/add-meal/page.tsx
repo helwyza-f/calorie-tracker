@@ -2,13 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Camera } from "lucide-react";
+import { Camera, Loader2 } from "lucide-react"; // ✅ Tambahkan ikon loader
 import { toast } from "sonner";
 import Image from "next/image";
 
 export default function AddMealPage() {
   const [file, setFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null); // ✅ Preview image
+  const [preview, setPreview] = useState<string | null>(null);
   const [description, setDescription] = useState("");
   const [mealType, setMealType] = useState("");
   const [loading, setLoading] = useState(false);
@@ -58,10 +58,22 @@ export default function AddMealPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white p-4">
+    <div className="relative min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white p-4">
+      {/* ✅ Overlay Blur saat Loading */}
+      {loading && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm z-50">
+          <Loader2 size={40} className="animate-spin text-white" />
+          <span className="text-white text-sm">AI is thinking...</span>
+        </div>
+      )}
+
       <h1 className="text-xl font-bold mb-4">Add Meal</h1>
 
-      <form onSubmit={handleSubmit} className="w-full max-w-md space-y-4">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-md space-y-4"
+        style={{ pointerEvents: loading ? "none" : "auto" }} // ✅ Disable form saat loading
+      >
         {/* Upload File */}
         <label className="w-full flex flex-col items-center justify-center border-2 border-dashed border-gray-500 p-6 rounded-lg cursor-pointer hover:border-blue-400">
           {preview ? (
@@ -117,10 +129,16 @@ export default function AddMealPage() {
         {/* Upload Button */}
         <button
           type="submit"
-          className="w-full bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg transition mb-20"
+          className="w-full bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-lg transition mb-20 flex items-center justify-center gap-2"
           disabled={loading}
         >
-          {loading ? "Uploading..." : "Upload"}
+          {loading ? (
+            <>
+              <Loader2 size={20} className="animate-spin" /> Uploading...
+            </>
+          ) : (
+            "Upload"
+          )}
         </button>
       </form>
     </div>
